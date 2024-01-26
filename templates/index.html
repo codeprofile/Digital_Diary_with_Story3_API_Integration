@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Diary</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .diary-container {
+            position: relative;
+            width: 100%;
+            height: auto;
+        }
+        .diary-image {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 500px; /* Adjust the maximum height as needed */
+            display: block;
+            margin: 0 auto;
+        }
+        .add-memories {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: white;
+            text-align: center;
+            opacity: 0.8;
+            animation: pulse 1.5s infinite alternate;
+        }
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar bg-body-tertiary" style="background-color: #e3f2fd;">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <img src="{{ url_for('static', filename='images/diary-journal-color-icon.svg') }}" alt="Bootstrap" width="30" height="24">
+        Digi-Diary
+    </a>
+  </div>
+</nav>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="diary-container">
+                    <a href="/diary"> <!-- Anchor tag added here -->
+                        <img src="{{ url_for('static', filename='images/diary.jpg') }}" alt="Diary" class="diary-image">
+                        <div class="add-memories">
+                            Add Some Memories
+                        </div>
+                    </a> <!-- Anchor tag ends here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

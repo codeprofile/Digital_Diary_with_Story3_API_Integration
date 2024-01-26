@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Diary</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <style>
+        .book {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .page {
+            flex: 1;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            min-height: 400px; /* Set a minimum height for each page */
+        }
+
+        .page h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-bottom: 20px;
+        }
+
+        .blog-preview {
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .centered-text {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar bg-body-tertiary" style="background-color: #e3f2fd;">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <img src="{{ url_for('static', filename='images/diary-journal-color-icon.svg') }}" alt="Bootstrap" width="30" height="24">
+        Digi-Diary
+    </a>
+  </div>
+</nav>
+    <div class="container mt-5">
+        <form method="post" id="storyForm" enctype="multipart/form-data">
+        <h2 class="centered-text mb-4">Today's Date: <span id="todayDate"></span></h2>
+        <div class="book">
+            <div class="page">
+                <h2>Upload Image</h2>
+                <div class="form-group">
+                    <input type="file" name="image" class="form-control-file" id="imageInput" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Image Preview" id="imagePreview" class="image-preview">
+                </div>
+            </div>
+            <div class="page">
+                <h2>Write Story</h2>
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" class="form-control" id="date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Title:</label>
+                         <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="story" class="form-control" rows="6" placeholder="Write your story here..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="saveStoryBtn">Save Story</button>
+                    <button type="button" class="btn btn-success" id="previewBtn">Preview</button>
+                </form>
+            </div>
+        </div>
+        <div id="blogPreview" class="d-none">
+            <h2 class="centered-text">Story Preview</h2>
+            <div id="previewContent" class="blog-preview"></div>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+        var yyyy = today.getFullYear();
+        today = yyyy + '-' + mm + '-' + dd;
+        document.getElementById('todayDate').innerHTML = today;
+
+        // Image Preview
+        function previewImage() {
+            var fileInput = document.getElementById('imageInput');
+            var imagePreview = document.getElementById('imagePreview');
+
+            fileInput.addEventListener('change', function() {
+                var file = fileInput.files[0];
+                var reader = new FileReader();
+
+                reader.onload = function() {
+                    imagePreview.src = reader.result;
+                    imagePreview.style.display = 'block';
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        previewImage();
+
+        // Preview Button
+        document.getElementById('previewBtn').addEventListener('click', function() {
+            var date = document.getElementById('date').value;
+            var story = document.getElementsByName('story')[0].value;
+            var imageSrc = document.getElementById('imagePreview').src;
+
+            // Show preview content
+            document.getElementById('blogPreview').classList.remove('d-none');
+            document.getElementById('previewContent').innerHTML = '<p class="centered-text"><strong>Date:</strong> ' + date + '</p>' +
+                                                                    '<div class="text-center mb-3"><img src="' + imageSrc + '" alt="Image Preview" class="image-preview"></div>' +
+                                                                    '<p><strong>Story:</strong></p>' +
+                                                                    '<p>' + story + '</p>';
+        });
+
+        // Form submission
+        document.getElementById('storyForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get form data
+            var formData = new FormData(this);
+
+            // Make AJAX POST request to save diary entry
+            $.ajax({
+                type: 'POST',
+                url: '/save_diary_entry',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    alert('Story saved successfully!');
+                    window.location.href = '/story_list'; // Redirect to story list page
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('Failed to save story. Please try again.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
