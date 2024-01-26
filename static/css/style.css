@@ -1,0 +1,62 @@
+/* Global Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Landing Page Styles */
+.landing-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.landing-container img {
+    width: 300px;
+    cursor: pointer;
+}
+
+/* Diary Page Styles */
+.diary-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    height: 100vh;
+}
+
+.left-section {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.left-section input[type="file"] {
+    margin-bottom: 10px;
+}
+
+.right-section {
+    flex: 2;
+}
+
+.right-section textarea {
+    width: 100%;
+    height: 300px;
+    resize: none;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+

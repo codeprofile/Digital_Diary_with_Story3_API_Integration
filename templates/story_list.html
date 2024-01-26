@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .card-img-top {
+            height: 200px; /* Set the desired height for all card images */
+            object-fit: cover; /* Ensure the image covers the entire container */
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar bg-body-tertiary" style="background-color: #e3f2fd;">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <img src="{{ url_for('static', filename='images/diary-journal-color-icon.svg') }}" alt="Bootstrap" width="30" height="24">
+        Digi-Diary
+    </a>
+  </div>
+</nav>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">List of Stories</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div id="storyList" class="row">
+                    <!-- Story cards will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for displaying full story -->
+    <div class="modal fade" id="storyModal" tabindex="-1" aria-labelledby="storyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="storyModalLabel">Story Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="storyDetails">
+                    <!-- Full story content will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Sample data (Replace this with your actual data)
+         var stories = {{ stories | tojson }};
+
+        $(document).ready(function() {
+            // Populate story cards
+            stories.forEach(function(story) {
+            const img_data = "static/images/" + story.image;
+            console.log(img_data);
+                var cardHtml = '<div class="col-md-4 mb-3">' +
+                                    '<div class="card">' +
+                                    '<img src=' + img_data +"  "+ 'class="card-img-top" alt="Story Image">' +
+                                        '<div class="card-body">' +
+                                            '<h5 class="card-title">Title: ' + story.title + '</h5>' +
+                                            '<p class="card-title">Date: ' + story.date + '</p>' +
+                                            '<p class="card-text">' + story.body.substring(0, 100) + '...</p>' +
+                                            '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#storyModal" data-story="' + story.body + '">Read More</button>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</div>';
+                $('#storyList').append(cardHtml);
+            });
+
+            // Handle modal opening and story details
+            $('#storyModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var story = button.data('story'); // Extract story from data-* attribute
+                var modal = $(this);
+                modal.find('.modal-body').text(story); // Set modal body with full story content
+            });
+        });
+    </script>
+</body>
+</html>
